@@ -3,7 +3,20 @@ import multer from 'multer';
 import uploadImage from '../config/firebase.config';
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, callback) => {
+    const ext = file?.originalname?.split('.').pop().toLowerCase();
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+      callback(null, true);
+    } else {
+      callback(new Error('Solo se permiten imágenes JPEG, JPG y PNG'));
+    }
+  },
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+});
 const uploadSingleImage = upload.single('image');
 
 const uploadImageToFirebase =  (req: Request, res: Response) => {
