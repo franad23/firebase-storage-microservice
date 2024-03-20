@@ -18,10 +18,8 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const uploadImage = async (imageData) => {
-  const blob = new Blob([imageData.buffer], { type: imageData.mimetype });
-  const file = new File([blob], imageData.fieldname, { type: imageData.mimetype });
   const storageRef = ref(storage, uuidv4());
-  const snapshot = await uploadBytesResumable(storageRef, file);
+  const snapshot = await uploadBytesResumable(storageRef, imageData.buffer);
   const imageUrl = await getDownloadURL(snapshot.ref);
   return imageUrl;
 };
